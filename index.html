@@ -3,308 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Android Web App Demo</title>
-    <!-- Tailwind CSS para estilos rápidos y responsivos -->
+    <title>ADN_LINK TEC 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Iconos Phosphor -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    
     <style>
-        /* Estilos base para simular una app nativa */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f3f4f6; /* Gris muy suave, típico de fondos de apps */
-            overscroll-behavior-y: none; /* Previene el rebote elástico del navegador */
-            user-select: none; /* Se siente más como app si no puedes seleccionar texto accidentalmente */
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        /* Ocultar barra de desplazamiento pero permitir scroll */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        /* Animaciones simples de transición */
-        .page {
-            display: none;
-            opacity: 0;
-            transition: opacity 0.2s ease-in-out;
-        }
-        .page.active {
-            display: block;
-            opacity: 1;
-        }
-
-        /* Efecto de pulsación en botones */
-        .btn-press:active {
-            transform: scale(0.95);
-            transition: transform 0.1s;
-        }
-
-        /* Simulación de Toast (Notificación Android) */
-        #toast {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 50px;
-            padding: 16px;
-            position: fixed;
-            z-index: 50;
-            left: 50%;
-            bottom: 80px;
-            transform: translateX(-50%);
-            font-size: 14px;
-            opacity: 0;
-            transition: opacity 0.3s, bottom 0.3s;
-        }
-        #toast.show {
-            visibility: visible;
-            opacity: 1;
-            bottom: 100px;
-        }
+        body { font-family: sans-serif; background-color: #f3f4f6; overscroll-behavior-y: none; user-select: none; }
+        .page { display: none; opacity: 0; transition: opacity 0.2s; }
+        .page.active { display: block; opacity: 1; }
+        #toast { visibility: hidden; min-width: 250px; background: #333; color: #fff; text-align: center; border-radius: 50px; padding: 16px; position: fixed; left: 50%; bottom: 80px; transform: translateX(-50%); z-index: 100; opacity: 0; transition: 0.3s; }
+        #toast.show { visibility: visible; opacity: 1; bottom: 100px; }
+        .mercenary-glow { box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); border: 1px solid #ef4444; }
     </style>
 </head>
-<body class="h-screen w-screen flex flex-col overflow-hidden text-gray-800">
+<body class="h-screen w-screen flex flex-col overflow-hidden">
 
-    <!-- Header / Barra Superior -->
-    <header class="bg-white shadow-sm z-10 px-4 py-3 flex justify-between items-center h-16 shrink-0">
-        <div class="flex items-center gap-3">
-            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
-                A
-            </div>
-            <h1 class="text-xl font-bold tracking-tight text-gray-800" id="header-title">Inicio</h1>
+    <header class="bg-white shadow-sm px-4 py-3 flex justify-between items-center h-16 shrink-0">
+        <h1 class="text-xl font-bold text-gray-800" id="header-title">ADN_LINK TEC</h1>
+        <div class="flex gap-2">
+            <span id="mode-badge" class="text-[10px] bg-green-100 text-green-600 px-2 py-1 rounded-full font-bold uppercase">Go Home</span>
         </div>
-        <button onclick="showToast('Notificaciones simuladas')" class="p-2 rounded-full hover:bg-gray-100 btn-press text-gray-600">
-            <i class="ph ph-bell text-2xl"></i>
-        </button>
     </header>
 
-    <!-- Contenedor Principal (Scrollable) -->
-    <main class="flex-1 overflow-y-auto no-scrollbar bg-gray-50 relative w-full pb-20">
+    <main class="flex-1 overflow-y-auto bg-gray-50 pb-20">
         
-        <!-- PÁGINA 1: INICIO (Dashboard) -->
         <div id="home-page" class="page active p-4 space-y-4">
-            <!-- Tarjeta de Bienvenida -->
-            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-5 text-white shadow-lg">
-                <p class="text-blue-100 text-sm font-medium mb-1">Bienvenido</p>
-                <h2 class="text-2xl font-bold mb-2">Mi App Portable</h2>
-                <p class="text-blue-50 text-sm opacity-90">Esta es una demostración de cómo HTML5 puede comportarse como una app nativa en Android.</p>
-                <button onclick="changeTab('info')" class="mt-4 bg-white text-blue-600 px-4 py-2 rounded-lg text-sm font-bold shadow-sm active:bg-gray-100 btn-press">
-                    Ver cómo funciona
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                <label class="block text-xs font-bold text-gray-500 mb-2 uppercase text-center">Entrada de Prompt</label>
+                <textarea id="prompt-input" class="w-full h-24 p-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Escribe aquí tu idea..."></textarea>
+                
+                <div class="grid grid-cols-2 gap-2 mt-3">
+                    <select id="style-select" class="bg-gray-50 border p-2 rounded-lg text-xs">
+                        <option value="standard">Estilo: Standard</option>
+                        <option value="raw">Estilo: Mercenary RAW</option>
+                        <option value="4k">Estilo: Ultra HD</option>
+                    </select>
+                    <select id="size-select" class="bg-gray-50 border p-2 rounded-lg text-xs">
+                        <option value="1024x1024">1:1 (Cuadrado)</option>
+                        <option value="1920x1080">16:9 (TV)</option>
+                    </select>
+                </div>
+
+                <button onclick="ejecutarADN()" class="w-full mt-4 bg-blue-600 text-white py-3 rounded-xl font-bold shadow-lg active:scale-95 transition-transform">
+                    GENERAR CON ADN_LINK
                 </button>
             </div>
 
-            <!-- Grid de Acciones -->
-            <h3 class="font-bold text-gray-700 text-lg mt-2">Acciones Rápidas</h3>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center gap-2 active:bg-gray-50 btn-press" onclick="showToast('Abriendo cámara...')">
-                    <div class="w-10 h-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
-                        <i class="ph ph-camera text-xl"></i>
-                    </div>
-                    <span class="font-medium text-sm">Cámara</span>
-                </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center gap-2 active:bg-gray-50 btn-press" onclick="showToast('Sincronizando...')">
-                    <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center">
-                        <i class="ph ph-arrows-clockwise text-xl"></i>
-                    </div>
-                    <span class="font-medium text-sm">Sincronizar</span>
-                </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center gap-2 active:bg-gray-50 btn-press" onclick="showToast('Guardado localmente')">
-                    <div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center">
-                        <i class="ph ph-floppy-disk text-xl"></i>
-                    </div>
-                    <span class="font-medium text-sm">Guardar</span>
-                </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center gap-2 active:bg-gray-50 btn-press" onclick="changeTab('settings')">
-                    <div class="w-10 h-10 bg-gray-100 text-gray-600 rounded-full flex items-center justify-center">
-                        <i class="ph ph-gear text-xl"></i>
-                    </div>
-                    <span class="font-medium text-sm">Ajustes</span>
-                </div>
-            </div>
-
-            <!-- Lista de elementos -->
-            <h3 class="font-bold text-gray-700 text-lg mt-2">Recientes</h3>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 divide-y divide-gray-100">
-                <div class="p-3 flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gray-200 rounded-full shrink-0"></div>
-                    <div class="flex-1">
-                        <p class="font-bold text-sm text-gray-800">Archivo Local 1</p>
-                        <p class="text-xs text-gray-400">Hace 2 minutos</p>
-                    </div>
-                    <i class="ph ph-caret-right text-gray-400"></i>
-                </div>
-                <div class="p-3 flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gray-200 rounded-full shrink-0"></div>
-                    <div class="flex-1">
-                        <p class="font-bold text-sm text-gray-800">Reporte HTML</p>
-                        <p class="text-xs text-gray-400">Hace 1 hora</p>
-                    </div>
-                    <i class="ph ph-caret-right text-gray-400"></i>
+            <div id="preview-area" class="hidden space-y-2">
+                <h3 class="text-xs font-bold text-gray-400 uppercase">Resultado en Cache Local</h3>
+                <div id="output-container" class="bg-gray-200 rounded-2xl aspect-square flex items-center justify-center overflow-hidden border-2 border-dashed border-gray-300">
+                    <p class="text-gray-400 text-xs">Esperando procesamiento...</p>
                 </div>
             </div>
         </div>
 
-        <!-- PÁGINA 2: INFO / PORTABILIDAD -->
-        <div id="info-page" class="page p-4 space-y-4">
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-                <div class="flex items-center gap-3 mb-3">
-                    <i class="ph ph-android-logo text-3xl text-green-500"></i>
-                    <h2 class="text-lg font-bold">¿Cómo hacer esto Portable?</h2>
-                </div>
-                <p class="text-gray-600 text-sm leading-relaxed mb-4">
-                    Para ejecutar HTML en Android como una app, tienes 3 opciones principales:
-                </p>
-                
-                <div class="space-y-4">
-                    <div class="border-l-4 border-blue-500 pl-3">
-                        <h3 class="font-bold text-gray-800 text-sm">1. PWA (Recomendado)</h3>
-                        <p class="text-xs text-gray-500 mt-1">Sube este archivo a un host (o GitHub Pages). En Chrome Android, toca el menú y elige <strong>"Instalar aplicación"</strong> o "Agregar a pantalla de inicio".</p>
-                    </div>
-                    
-                    <div class="border-l-4 border-purple-500 pl-3">
-                        <h3 class="font-bold text-gray-800 text-sm">2. Capacitor JS / Cordova</h3>
-                        <p class="text-xs text-gray-500 mt-1">Herramientas de desarrollo que "envuelven" este HTML en un archivo <code>.apk</code> real.</p>
-                        <div class="bg-gray-100 p-2 rounded mt-2 font-mono text-xs overflow-x-auto whitespace-nowrap">
-                            npm install @capacitor/core
-                        </div>
-                    </div>
-
-                    <div class="border-l-4 border-orange-500 pl-3">
-                        <h3 class="font-bold text-gray-800 text-sm">3. Webview Apps</h3>
-                        <p class="text-xs text-gray-500 mt-1">Crear un proyecto simple en Android Studio que contenga un componente <code>WebView</code> cargando este archivo localmente desde la carpeta assets.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- PÁGINA 3: AJUSTES -->
-        <div id="settings-page" class="page p-4 space-y-4">
-            <h2 class="font-bold text-xl mb-4">Configuración</h2>
-            
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="p-4 flex items-center justify-between border-b border-gray-50">
-                    <span class="text-sm font-medium">Modo Oscuro</span>
-                    <div class="w-10 h-6 bg-gray-200 rounded-full relative cursor-pointer" onclick="toggleSwitch(this)">
-                        <div class="w-4 h-4 bg-white rounded-full absolute top-1 left-1 transition-all shadow-sm"></div>
-                    </div>
-                </div>
-                <div class="p-4 flex items-center justify-between border-b border-gray-50">
-                    <span class="text-sm font-medium">Notificaciones</span>
-                    <div class="w-10 h-6 bg-green-500 rounded-full relative cursor-pointer" onclick="toggleSwitch(this)">
-                        <div class="w-4 h-4 bg-white rounded-full absolute top-1 right-1 transition-all shadow-sm"></div>
-                    </div>
-                </div>
-                <div class="p-4 flex items-center justify-between">
-                    <span class="text-sm font-medium">Datos Offline</span>
-                    <span class="text-xs text-gray-400">12.5 MB</span>
-                </div>
-            </div>
-
-            <button class="w-full bg-red-50 text-red-600 py-3 rounded-xl text-sm font-bold mt-4 btn-press">
-                Borrar Caché
-            </button>
-            
-            <p class="text-center text-xs text-gray-400 mt-4">Versión 1.0.0 (Portable Build)</p>
+        <div id="info-page" class="page p-4">
+            <h2 class="font-bold">Configuración ADN_LINK</h2>
+            <p class="text-sm text-gray-500">Material entrelazado con Perchance.org activo.</p>
         </div>
 
     </main>
 
-    <!-- Barra de Navegación Inferior (Bottom Nav) -->
-    <nav class="bg-white border-t border-gray-200 flex justify-around items-center h-16 pb-safe shrink-0 z-20">
-        <button onclick="changeTab('home')" class="nav-btn flex flex-col items-center justify-center w-full h-full text-blue-600" id="btn-home">
-            <i class="ph ph-house-line text-2xl mb-0.5"></i>
-            <span class="text-[10px] font-medium">Inicio</span>
-        </button>
-        <button onclick="changeTab('info')" class="nav-btn flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-gray-600" id="btn-info">
-            <i class="ph ph-code text-2xl mb-0.5"></i>
-            <span class="text-[10px] font-medium">Exportar</span>
-        </button>
-        <button onclick="changeTab('settings')" class="nav-btn flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-gray-600" id="btn-settings">
-            <i class="ph ph-gear text-2xl mb-0.5"></i>
-            <span class="text-[10px] font-medium">Ajustes</span>
-        </button>
+    <nav class="bg-white border-t flex justify-around items-center h-16 fixed bottom-0 w-full">
+        <button onclick="changeTab('home')" class="flex flex-col items-center text-blue-600"><i class="ph ph-house text-2xl"></i><span class="text-[10px]">Inicio</span></button>
+        <button onclick="changeTab('info')" class="flex flex-col items-center text-gray-400"><i class="ph ph-shield-check text-2xl"></i><span class="text-[10px]">Seguridad</span></button>
     </nav>
 
-    <!-- Toast Component -->
-    <div id="toast">Mensaje de notificación</div>
+    <div id="toast"></div>
 
     <script>
-        // --- Lógica de Navegación ---
-        function changeTab(tabName) {
-            // Ocultar todas las páginas
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            // Desactivar todos los botones del nav
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('text-blue-600');
-                btn.classList.add('text-gray-400');
-            });
-
-            // Mostrar página seleccionada
-            document.getElementById(`${tabName}-page`).classList.add('active');
-            
-            // Activar botón seleccionado
-            const activeBtn = document.getElementById(`btn-${tabName}`);
-            activeBtn.classList.remove('text-gray-400');
-            activeBtn.classList.add('text-blue-600');
-
-            // Cambiar título del header
-            const titles = {
-                'home': 'Inicio',
-                'info': 'Exportar a APK',
-                'settings': 'Ajustes'
-            };
-            document.getElementById('header-title').innerText = titles[tabName];
+        function showToast(m) { const t=document.getElementById("toast"); t.innerText=m; t.className="show"; setTimeout(()=>t.className="",3000); }
+        
+        function changeTab(t) {
+            document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+            document.getElementById(t+"-page").classList.add('active');
         }
 
-        // --- Utilidades ---
-        function showToast(message) {
-            const toast = document.getElementById("toast");
-            toast.innerText = message;
-            toast.className = "show";
-            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
-        }
+        async function ejecutarADN() {
+            const prompt = document.getElementById("prompt-input").value;
+            const estilo = document.getElementById("style-select").value;
+            const tamaño = document.getElementById("size-select").value;
+            const badge = document.getElementById("mode-badge");
+            const preview = document.getElementById("preview-area");
 
-        function toggleSwitch(element) {
-            // Simulación visual de switch
-            const isOff = element.classList.contains('bg-gray-200');
-            const circle = element.querySelector('div');
+            if(!prompt) return showToast("Introduce un prompt");
+
+            // Lógica Vision Advanced Tag's
+            const isMercenary = prompt.toLowerCase().includes("mercenary") || estilo === "raw";
             
-            if (isOff) {
-                element.classList.remove('bg-gray-200');
-                element.classList.add('bg-green-500');
-                circle.classList.remove('left-1');
-                circle.classList.add('right-1');
-                showToast('Activado');
+            preview.classList.remove("hidden");
+            document.getElementById("output-container").innerHTML = '<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>';
+
+            if(isMercenary) {
+                badge.innerText = "MERCENARY MODE";
+                badge.className = "text-[10px] bg-red-100 text-red-600 px-2 py-1 rounded-full font-bold uppercase";
+                showToast("Accediendo a Perchance (Mercenary)...");
+                
+                // Redirección o Inyección de Perchance (Simulada para el rincón secreto)
+                setTimeout(() => {
+                    document.getElementById("output-container").innerHTML = 
+                        `<iframe src="https://perchance.org/k1wau93cx4?prompt=${encodeURIComponent(prompt)}" class="w-full h-full border-none"></iframe>`;
+                    showToast("Guardado en Cache Local");
+                }, 1500);
             } else {
-                element.classList.add('bg-gray-200');
-                element.classList.remove('bg-green-500');
-                circle.classList.add('left-1');
-                circle.classList.remove('right-1');
-                showToast('Desactivado');
+                badge.innerText = "GO HOME";
+                badge.className = "text-[10px] bg-green-100 text-green-600 px-2 py-1 rounded-full font-bold uppercase";
+                showToast("Procesando con Google Standard...");
+                setTimeout(() => {
+                    document.getElementById("output-container").innerHTML = '<p class="text-gray-500 p-4 text-center text-xs">Material seguro procesado por Google Vision.</p>';
+                }, 1500);
             }
         }
-
-        // --- Detección de entorno (Simulación) ---
-        // En una app real, aquí detectaríamos si estamos en modo PWA o navegador
-        document.addEventListener('DOMContentLoaded', () => {
-            // Ajustar altura para móviles con barra de navegación del sistema
-            const setHeight = () => {
-                document.body.style.height = window.innerHeight + "px";
-            }
-            window.addEventListener("resize", setHeight);
-            setHeight();
-        });
     </script>
 </body>
 </html>
-
